@@ -1,0 +1,22 @@
+# Build outputs
+/bin/
+/dist/
+*.out
+
+# Test and coverage outputs
+coverage.txt
+coverage.html
+
+# Local databases and generated data
+*.db
+*.db-shm
+*.db-wal
+
+# Local configuration
+.env
+.env.*
+
+# Editors and operating systems
+.DS_Store
+.idea/
+.vscode/
