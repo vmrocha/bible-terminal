@@ -128,6 +128,59 @@ func (reader *Reader) Read(ctx context.Context, query reference.Query) (bible.Pa
 	return passage, nil
 }
 
+// Navigate resolves the chapter immediately before or after a chapter query,
+// crossing book boundaries when necessary.
+func (reader *Reader) Navigate(ctx context.Context, query reference.Query, direction int) (reference.Query, error) {
+	if !query.IsChapter() {
+		return reference.Query{}, errors.New("chapter navigation requires a chapter reference")
+	}
+	if direction != -1 && direction != 1 {
+		return reference.Query{}, fmt.Errorf("invalid navigation direction %d", direction)
+	}
+
+	book, _, err := reader.resolveBook(ctx, query.Book)
+	if err != nil {
+		return reference.Query{}, err
+	}
+	lastChapter, err := reader.lastChapter(ctx, book.ID)
+	if err != nil {
+		return reference.Query{}, err
+	}
+	if query.Chapter > lastChapter {
+		return reference.Query{}, passageNotFound(book.Name, query)
+	}
+
+	if direction > 0 {
+		if query.Chapter < lastChapter {
+			return reference.Query{Book: book.ID, Chapter: query.Chapter + 1}, nil
+		}
+		next, err := reader.bookAtPosition(ctx, book.Position+1)
+		if errors.Is(err, sql.ErrNoRows) {
+			return reference.Query{}, errors.New("already at the end of the Bible")
+		}
+		if err != nil {
+			return reference.Query{}, err
+		}
+		return reference.Query{Book: next.ID, Chapter: 1}, nil
+	}
+
+	if query.Chapter > 1 {
+		return reference.Query{Book: book.ID, Chapter: query.Chapter - 1}, nil
+	}
+	previous, err := reader.bookAtPosition(ctx, book.Position-1)
+	if errors.Is(err, sql.ErrNoRows) {
+		return reference.Query{}, errors.New("already at the beginning of the Bible")
+	}
+	if err != nil {
+		return reference.Query{}, err
+	}
+	lastChapter, err = reader.lastChapter(ctx, previous.ID)
+	if err != nil {
+		return reference.Query{}, err
+	}
+	return reference.Query{Book: previous.ID, Chapter: lastChapter}, nil
+}
+
 func (reader *Reader) resolveBook(ctx context.Context, name string) (bible.Book, string, error) {
 	candidateID := strings.ReplaceAll(strings.ToLower(name), " ", "-")
 	var book bible.Book
@@ -152,6 +205,32 @@ func (reader *Reader) resolveBook(ctx context.Context, name string) (bible.Book,
 		return bible.Book{}, "", fmt.Errorf("resolve book: %w", err)
 	}
 	return book, translation, nil
+}
+
+func (reader *Reader) bookAtPosition(ctx context.Context, position int) (bible.Book, error) {
+	var book bible.Book
+	err := reader.connection.QueryRowContext(ctx, `
+        SELECT id, source_code, position, name
+        FROM books
+        WHERE translation_id = 'engwebp' AND position = ?
+    `, position).Scan(&book.ID, &book.SourceCode, &book.Position, &book.Name)
+	if err != nil {
+		return bible.Book{}, err
+	}
+	return book, nil
+}
+
+func (reader *Reader) lastChapter(ctx context.Context, bookID string) (int, error) {
+	var chapter int
+	err := reader.connection.QueryRowContext(ctx, `
+        SELECT max(chapter)
+        FROM verses
+        WHERE translation_id = 'engwebp' AND book_id = ?
+    `, bookID).Scan(&chapter)
+	if err != nil {
+		return 0, fmt.Errorf("read last chapter for %s: %w", bookID, err)
+	}
+	return chapter, nil
 }
 
 func passageNotFound(book string, query reference.Query) error {

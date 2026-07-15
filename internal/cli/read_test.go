@@ -14,10 +14,17 @@ type stubReader struct {
 	passage bible.Passage
 	err     error
 	closed  bool
+	query   reference.Query
+	next    reference.Query
 }
 
-func (reader *stubReader) Read(context.Context, reference.Query) (bible.Passage, error) {
+func (reader *stubReader) Read(_ context.Context, query reference.Query) (bible.Passage, error) {
+	reader.query = query
 	return reader.passage, reader.err
+}
+
+func (reader *stubReader) Navigate(context.Context, reference.Query, int) (reference.Query, error) {
+	return reader.next, nil
 }
 
 func (reader *stubReader) Close() error {
@@ -60,5 +67,38 @@ func TestReadCommandReportsReaderError(t *testing.T) {
 	}
 	if !reader.closed {
 		t.Fatal("reader was not closed after an error")
+	}
+}
+
+func TestReadCommandNavigates(t *testing.T) {
+	reader := &stubReader{
+		next: reference.Query{Book: "john", Chapter: 4},
+		passage: bible.Passage{
+			Translation: "WEBP",
+			Book:        bible.Book{Name: "John"},
+			Chapter:     4,
+			Verses:      []bible.Verse{{Chapter: 4, Number: 1, Text: "After these things…"}},
+		},
+	}
+	factory := func(context.Context) (PassageReader, error) { return reader, nil }
+
+	_, err := executeWithOptions(t, []Option{WithReaderFactory(factory)}, "read", "John", "3", "--next")
+	if err != nil {
+		t.Fatalf("execute read --next: %v", err)
+	}
+	if reader.query.Book != "john" || reader.query.Chapter != 4 {
+		t.Fatalf("read query is %#v", reader.query)
+	}
+}
+
+func TestReadCommandRejectsInvalidNavigationFlags(t *testing.T) {
+	for _, args := range [][]string{
+		{"read", "John", "3", "--next", "--previous"},
+		{"read", "John", "3:16", "--next"},
+	} {
+		_, err := executeWithOptions(t, nil, args...)
+		if err == nil {
+			t.Fatalf("execute %v unexpectedly succeeded", args)
+		}
 	}
 }

@@ -126,8 +126,9 @@ book, chapter, and verse totals, and all required attribution is present.
 
 Progress: the validated WEBP database is embedded directly in the executable.
 The first reader supports chapters, individual verses, inclusive same-chapter
-ranges, a small documented alias set, and stable plain output. Broader aliases,
-previous/next navigation, and styled TTY output remain.
+ranges, aliases for all 66 books, cross-book previous/next chapter navigation,
+book discovery, and stable plain output. Automatic non-TTY detection and styled
+TTY output remain.
 
 - Implement the reference grammar and aliases.
 - Implement chapter, verse, and range reads.

@@ -21,6 +21,7 @@ func New(info buildinfo.Info, options ...Option) *cobra.Command {
 	}
 
 	command.SetVersionTemplate("bible {{.Version}}\n")
+	command.AddCommand(newBooksCommand())
 	command.AddCommand(newReadCommand(configuration.readerFactory))
 	command.AddCommand(newVersionCommand(info))
 

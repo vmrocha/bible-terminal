@@ -7,12 +7,13 @@ func TestParse(t *testing.T) {
 		input string
 		want  Query
 	}{
-		{"John 3", Query{Book: "John", Chapter: 3}},
-		{"John 3:16", Query{Book: "John", Chapter: 3, StartVerse: 16, EndVerse: 16}},
-		{"John 3:16-21", Query{Book: "John", Chapter: 3, StartVerse: 16, EndVerse: 21}},
-		{"1 John 1:1", Query{Book: "1 John", Chapter: 1, StartVerse: 1, EndVerse: 1}},
+		{"John 3", Query{Book: "john", Chapter: 3}},
+		{"John 3:16", Query{Book: "john", Chapter: 3, StartVerse: 16, EndVerse: 16}},
+		{"John 3:16-21", Query{Book: "john", Chapter: 3, StartVerse: 16, EndVerse: 21}},
+		{"1 John 1:1", Query{Book: "1-john", Chapter: 1, StartVerse: 1, EndVerse: 1}},
 		{"Jn. 3:16", Query{Book: "john", Chapter: 3, StartVerse: 16, EndVerse: 16}},
 		{"  Psalm   23  ", Query{Book: "psalms", Chapter: 23}},
+		{"1 Cor. 13", Query{Book: "1-corinthians", Chapter: 13}},
 	}
 
 	for _, test := range tests {
