@@ -5,9 +5,9 @@ without leaving the terminal.
 
 ## Status
 
-The project is currently in the planning stage. The proposed implementation is
-a Go CLI backed by an embedded SQLite database. See [docs/PLAN.md](docs/PLAN.md)
-for the product scope, architecture, milestones, and acceptance criteria.
+The Go CLI foundation is under active development. The planned reader will use
+an embedded SQLite database. See [docs/PLAN.md](docs/PLAN.md) for the product
+scope, architecture, milestones, and acceptance criteria.
 
 ## Product direction
 
@@ -39,6 +39,18 @@ The first release should:
 - SQLite with full-text search
 - Lip Gloss for terminal presentation
 - Bubble Tea later, if a full-screen reader proves useful
+
+## Development
+
+The project requires Go 1.26 or newer and Make. Run the complete local check:
+
+```console
+make check
+./bin/bible version
+```
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the development workflow and Bible
+text licensing requirements.
 
 ## License
 
