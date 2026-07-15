@@ -9,6 +9,7 @@ coverage.html
 
 # Local databases and generated data
 *.db
+!internal/storage/engwebp.db
 *.db-journal
 *.db-shm
 *.db-wal
