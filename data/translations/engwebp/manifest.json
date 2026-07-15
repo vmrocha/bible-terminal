@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "id": "engwebp",
+  "name": "World English Bible",
+  "abbreviation": "WEBP",
+  "language": {
+    "tag": "en-US",
+    "name": "English"
+  },
+  "edition": "Protestant Edition",
+  "canon": "protestant-66",
+  "text_edition": "2020 stable text edition",
+  "source": {
+    "publisher": "eBible.org",
+    "homepage": "https://ebible.org/engwebp/",
+    "archive_url": "https://ebible.org/Scriptures/engwebp_vpl.zip",
+    "archive_member": "engwebp_vpl.txt",
+    "retrieved_at": "2026-07-15",
+    "archive_sha256": "f5c7bd6d09cf5b9ddd188726f6a4dac0096228c4478401853de20a5d845d72a7"
+  },
+  "rights": {
+    "status": "public-domain",
+    "notice_url": "https://ebible.org/engwebp/copyright.htm",
+    "trademark": "World English Bible is a trademark of eBible.org.",
+    "text_policy": "Preserve the publisher-provided verse text; changed text must not be identified as the World English Bible."
+  },
+  "expected": {
+    "books": 66,
+    "verses": 31103,
+    "first_reference": "GEN 1:1",
+    "last_reference": "REV 22:21"
+  }
+}
