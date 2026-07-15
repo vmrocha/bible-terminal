@@ -39,6 +39,7 @@ func TestHelp(t *testing.T) {
 
 	for _, expected := range []string{
 		"Read the Bible from your terminal",
+		"books",
 		"read",
 		"version",
 		"--help",

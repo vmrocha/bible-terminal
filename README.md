@@ -30,7 +30,15 @@ bible read John 3
 bible read "John 3:16"
 bible read "John 3:16-21"
 bible read Jn 3:16 --plain
+bible read John 3 --next
+bible read Matthew 1 --previous
+bible read "1 Cor 13"
+bible books
 ```
+
+`bible books` lists all canonical names, source codes, and accepted aliases.
+Chapter navigation crosses book boundaries, so moving forward from John 21 reads
+Acts 1 and moving backward from Matthew 1 reads Malachi 4.
 
 The first release should:
 

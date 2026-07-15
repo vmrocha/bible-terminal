@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+
+	"github.com/vmrocha/bible-terminal/internal/canon"
 )
 
 // Query is a parsed, not-yet-resolved Bible reference.
@@ -80,25 +82,8 @@ func positiveNumber(value, part, input string) (int, error) {
 }
 
 func normalizeBook(book string) string {
-	normalized := strings.ToLower(strings.TrimSuffix(strings.TrimSpace(book), "."))
-	normalized = strings.Join(strings.Fields(normalized), " ")
-	if canonical, ok := bookAliases[normalized]; ok {
+	if canonical, ok := canon.Resolve(book); ok {
 		return canonical
 	}
 	return book
-}
-
-var bookAliases = map[string]string{
-	"gen":   "genesis",
-	"ex":    "exodus",
-	"ps":    "psalms",
-	"psa":   "psalms",
-	"psalm": "psalms",
-	"mt":    "matthew",
-	"matt":  "matthew",
-	"mk":    "mark",
-	"lk":    "luke",
-	"jn":    "john",
-	"rom":   "romans",
-	"rev":   "revelation",
 }

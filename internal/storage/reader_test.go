@@ -7,6 +7,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/vmrocha/bible-terminal/internal/canon"
 	"github.com/vmrocha/bible-terminal/internal/reference"
 )
 
@@ -80,5 +81,105 @@ func TestReadRejectsMissingPassages(t *testing.T) {
 				t.Fatalf("Read(%q) unexpectedly succeeded", input)
 			}
 		})
+	}
+}
+
+func TestNavigate(t *testing.T) {
+	reader, err := OpenEmbedded(context.Background())
+	if err != nil {
+		t.Fatalf("OpenEmbedded: %v", err)
+	}
+	t.Cleanup(func() { _ = reader.Close() })
+
+	tests := []struct {
+		input     string
+		direction int
+		want      reference.Query
+	}{
+		{"John 3", 1, reference.Query{Book: "john", Chapter: 4}},
+		{"John 3", -1, reference.Query{Book: "john", Chapter: 2}},
+		{"John 21", 1, reference.Query{Book: "acts", Chapter: 1}},
+		{"Matthew 1", -1, reference.Query{Book: "malachi", Chapter: 4}},
+	}
+
+	for _, test := range tests {
+		t.Run(test.input, func(t *testing.T) {
+			query, err := reference.Parse(test.input)
+			if err != nil {
+				t.Fatalf("parse reference: %v", err)
+			}
+			got, err := reader.Navigate(context.Background(), query, test.direction)
+			if err != nil {
+				t.Fatalf("Navigate: %v", err)
+			}
+			if got != test.want {
+				t.Fatalf("Navigate = %#v, want %#v", got, test.want)
+			}
+		})
+	}
+}
+
+func TestNavigateRejectsBoundaries(t *testing.T) {
+	reader, err := OpenEmbedded(context.Background())
+	if err != nil {
+		t.Fatalf("OpenEmbedded: %v", err)
+	}
+	t.Cleanup(func() { _ = reader.Close() })
+
+	for _, test := range []struct {
+		input     string
+		direction int
+		want      string
+	}{
+		{"Genesis 1", -1, "beginning"},
+		{"Revelation 22", 1, "end"},
+		{"John 999", 1, "chapter not found"},
+		{"John 3:16", 1, "requires a chapter"},
+	} {
+		t.Run(test.input, func(t *testing.T) {
+			query, err := reference.Parse(test.input)
+			if err != nil {
+				t.Fatalf("parse reference: %v", err)
+			}
+			_, err = reader.Navigate(context.Background(), query, test.direction)
+			if err == nil || !strings.Contains(err.Error(), test.want) {
+				t.Fatalf("expected error containing %q, got %v", test.want, err)
+			}
+		})
+	}
+}
+
+func TestNavigateAcrossEveryBookBoundary(t *testing.T) {
+	ctx := context.Background()
+	reader, err := OpenEmbedded(ctx)
+	if err != nil {
+		t.Fatalf("OpenEmbedded: %v", err)
+	}
+	t.Cleanup(func() { _ = reader.Close() })
+
+	books := canon.ProtestantBooks()
+	for index := 0; index < len(books)-1; index++ {
+		current := books[index].Book
+		next := books[index+1].Book
+		lastChapter, err := reader.lastChapter(ctx, current.ID)
+		if err != nil {
+			t.Fatalf("last chapter for %s: %v", current.Name, err)
+		}
+
+		forward, err := reader.Navigate(ctx, reference.Query{Book: current.ID, Chapter: lastChapter}, 1)
+		if err != nil {
+			t.Fatalf("navigate forward from %s: %v", current.Name, err)
+		}
+		if forward.Book != next.ID || forward.Chapter != 1 {
+			t.Errorf("after %s is %#v, want %s 1", current.Name, forward, next.Name)
+		}
+
+		backward, err := reader.Navigate(ctx, reference.Query{Book: next.ID, Chapter: 1}, -1)
+		if err != nil {
+			t.Fatalf("navigate backward from %s: %v", next.Name, err)
+		}
+		if backward.Book != current.ID || backward.Chapter != lastChapter {
+			t.Errorf("before %s is %#v, want %s %d", next.Name, backward, current.Name, lastChapter)
+		}
 	}
 }

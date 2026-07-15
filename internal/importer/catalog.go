@@ -1,75 +1,18 @@
 package importer
 
-import "github.com/vmrocha/bible-terminal/internal/bible"
+import (
+	"github.com/vmrocha/bible-terminal/internal/bible"
+	"github.com/vmrocha/bible-terminal/internal/canon"
+)
 
-var protestantBooks = []bible.Book{
-	{ID: "genesis", SourceCode: "GEN", Position: 1, Name: "Genesis"},
-	{ID: "exodus", SourceCode: "EXO", Position: 2, Name: "Exodus"},
-	{ID: "leviticus", SourceCode: "LEV", Position: 3, Name: "Leviticus"},
-	{ID: "numbers", SourceCode: "NUM", Position: 4, Name: "Numbers"},
-	{ID: "deuteronomy", SourceCode: "DEU", Position: 5, Name: "Deuteronomy"},
-	{ID: "joshua", SourceCode: "JOS", Position: 6, Name: "Joshua"},
-	{ID: "judges", SourceCode: "JDG", Position: 7, Name: "Judges"},
-	{ID: "ruth", SourceCode: "RUT", Position: 8, Name: "Ruth"},
-	{ID: "1-samuel", SourceCode: "1SA", Position: 9, Name: "1 Samuel"},
-	{ID: "2-samuel", SourceCode: "2SA", Position: 10, Name: "2 Samuel"},
-	{ID: "1-kings", SourceCode: "1KI", Position: 11, Name: "1 Kings"},
-	{ID: "2-kings", SourceCode: "2KI", Position: 12, Name: "2 Kings"},
-	{ID: "1-chronicles", SourceCode: "1CH", Position: 13, Name: "1 Chronicles"},
-	{ID: "2-chronicles", SourceCode: "2CH", Position: 14, Name: "2 Chronicles"},
-	{ID: "ezra", SourceCode: "EZR", Position: 15, Name: "Ezra"},
-	{ID: "nehemiah", SourceCode: "NEH", Position: 16, Name: "Nehemiah"},
-	{ID: "esther", SourceCode: "EST", Position: 17, Name: "Esther"},
-	{ID: "job", SourceCode: "JOB", Position: 18, Name: "Job"},
-	{ID: "psalms", SourceCode: "PSA", Position: 19, Name: "Psalms"},
-	{ID: "proverbs", SourceCode: "PRO", Position: 20, Name: "Proverbs"},
-	{ID: "ecclesiastes", SourceCode: "ECC", Position: 21, Name: "Ecclesiastes"},
-	{ID: "song-of-solomon", SourceCode: "SOL", Position: 22, Name: "Song of Solomon"},
-	{ID: "isaiah", SourceCode: "ISA", Position: 23, Name: "Isaiah"},
-	{ID: "jeremiah", SourceCode: "JER", Position: 24, Name: "Jeremiah"},
-	{ID: "lamentations", SourceCode: "LAM", Position: 25, Name: "Lamentations"},
-	{ID: "ezekiel", SourceCode: "EZE", Position: 26, Name: "Ezekiel"},
-	{ID: "daniel", SourceCode: "DAN", Position: 27, Name: "Daniel"},
-	{ID: "hosea", SourceCode: "HOS", Position: 28, Name: "Hosea"},
-	{ID: "joel", SourceCode: "JOE", Position: 29, Name: "Joel"},
-	{ID: "amos", SourceCode: "AMO", Position: 30, Name: "Amos"},
-	{ID: "obadiah", SourceCode: "OBA", Position: 31, Name: "Obadiah"},
-	{ID: "jonah", SourceCode: "JON", Position: 32, Name: "Jonah"},
-	{ID: "micah", SourceCode: "MIC", Position: 33, Name: "Micah"},
-	{ID: "nahum", SourceCode: "NAH", Position: 34, Name: "Nahum"},
-	{ID: "habakkuk", SourceCode: "HAB", Position: 35, Name: "Habakkuk"},
-	{ID: "zephaniah", SourceCode: "ZEP", Position: 36, Name: "Zephaniah"},
-	{ID: "haggai", SourceCode: "HAG", Position: 37, Name: "Haggai"},
-	{ID: "zechariah", SourceCode: "ZEC", Position: 38, Name: "Zechariah"},
-	{ID: "malachi", SourceCode: "MAL", Position: 39, Name: "Malachi"},
-	{ID: "matthew", SourceCode: "MAT", Position: 40, Name: "Matthew"},
-	{ID: "mark", SourceCode: "MAR", Position: 41, Name: "Mark"},
-	{ID: "luke", SourceCode: "LUK", Position: 42, Name: "Luke"},
-	{ID: "john", SourceCode: "JOH", Position: 43, Name: "John"},
-	{ID: "acts", SourceCode: "ACT", Position: 44, Name: "Acts"},
-	{ID: "romans", SourceCode: "ROM", Position: 45, Name: "Romans"},
-	{ID: "1-corinthians", SourceCode: "1CO", Position: 46, Name: "1 Corinthians"},
-	{ID: "2-corinthians", SourceCode: "2CO", Position: 47, Name: "2 Corinthians"},
-	{ID: "galatians", SourceCode: "GAL", Position: 48, Name: "Galatians"},
-	{ID: "ephesians", SourceCode: "EPH", Position: 49, Name: "Ephesians"},
-	{ID: "philippians", SourceCode: "PHI", Position: 50, Name: "Philippians"},
-	{ID: "colossians", SourceCode: "COL", Position: 51, Name: "Colossians"},
-	{ID: "1-thessalonians", SourceCode: "1TH", Position: 52, Name: "1 Thessalonians"},
-	{ID: "2-thessalonians", SourceCode: "2TH", Position: 53, Name: "2 Thessalonians"},
-	{ID: "1-timothy", SourceCode: "1TI", Position: 54, Name: "1 Timothy"},
-	{ID: "2-timothy", SourceCode: "2TI", Position: 55, Name: "2 Timothy"},
-	{ID: "titus", SourceCode: "TIT", Position: 56, Name: "Titus"},
-	{ID: "philemon", SourceCode: "PHM", Position: 57, Name: "Philemon"},
-	{ID: "hebrews", SourceCode: "HEB", Position: 58, Name: "Hebrews"},
-	{ID: "james", SourceCode: "JAM", Position: 59, Name: "James"},
-	{ID: "1-peter", SourceCode: "1PE", Position: 60, Name: "1 Peter"},
-	{ID: "2-peter", SourceCode: "2PE", Position: 61, Name: "2 Peter"},
-	{ID: "1-john", SourceCode: "1JO", Position: 62, Name: "1 John"},
-	{ID: "2-john", SourceCode: "2JO", Position: 63, Name: "2 John"},
-	{ID: "3-john", SourceCode: "3JO", Position: 64, Name: "3 John"},
-	{ID: "jude", SourceCode: "JUD", Position: 65, Name: "Jude"},
-	{ID: "revelation", SourceCode: "REV", Position: 66, Name: "Revelation"},
-}
+var protestantBooks = func() []bible.Book {
+	entries := canon.ProtestantBooks()
+	books := make([]bible.Book, len(entries))
+	for index, entry := range entries {
+		books[index] = entry.Book
+	}
+	return books
+}()
 
 var booksBySourceCode = func() map[string]bible.Book {
 	books := make(map[string]bible.Book, len(protestantBooks))
