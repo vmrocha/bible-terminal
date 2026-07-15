@@ -5,9 +5,9 @@ without leaving the terminal.
 
 ## Status
 
-The Go CLI foundation is under active development. The planned reader will use
-an embedded SQLite database. See [docs/PLAN.md](docs/PLAN.md) for the product
-scope, architecture, milestones, and acceptance criteria.
+The Go CLI is under active development and includes an offline WEBP reader
+backed by an embedded SQLite database. See [docs/PLAN.md](docs/PLAN.md) for the
+product scope, architecture, milestones, and acceptance criteria.
 
 ## Product direction
 
@@ -21,6 +21,15 @@ bible read "John 3:16-21" --plain
 bible search "for God so loved"
 bible books
 bible random
+```
+
+The currently implemented reading forms are:
+
+```console
+bible read John 3
+bible read "John 3:16"
+bible read "John 3:16-21"
+bible read Jn 3:16 --plain
 ```
 
 The first release should:

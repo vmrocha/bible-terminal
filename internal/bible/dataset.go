@@ -21,3 +21,13 @@ type Verse struct {
 	Number  int
 	Text    string
 }
+
+// Passage contains one resolved chapter, verse, or verse range.
+type Passage struct {
+	Translation string
+	Book        Book
+	Chapter     int
+	StartVerse  int
+	EndVerse    int
+	Verses      []Verse
+}

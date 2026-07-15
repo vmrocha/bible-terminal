@@ -15,10 +15,14 @@ var testBuild = buildinfo.Info{
 }
 
 func execute(t *testing.T, args ...string) (string, error) {
+	return executeWithOptions(t, nil, args...)
+}
+
+func executeWithOptions(t *testing.T, options []Option, args ...string) (string, error) {
 	t.Helper()
 
 	output := new(bytes.Buffer)
-	command := New(testBuild)
+	command := New(testBuild, options...)
 	command.SetOut(output)
 	command.SetErr(output)
 	command.SetArgs(args)
@@ -35,6 +39,7 @@ func TestHelp(t *testing.T) {
 
 	for _, expected := range []string{
 		"Read the Bible from your terminal",
+		"read",
 		"version",
 		"--help",
 	} {

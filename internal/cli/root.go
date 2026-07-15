@@ -6,7 +6,12 @@ import (
 )
 
 // New constructs the root command with the supplied build metadata.
-func New(info buildinfo.Info) *cobra.Command {
+func New(info buildinfo.Info, options ...Option) *cobra.Command {
+	configuration := configuration{}
+	for _, option := range options {
+		option(&configuration)
+	}
+
 	command := &cobra.Command{
 		Use:           "bible",
 		Short:         "Read the Bible from your terminal",
@@ -16,6 +21,7 @@ func New(info buildinfo.Info) *cobra.Command {
 	}
 
 	command.SetVersionTemplate("bible {{.Version}}\n")
+	command.AddCommand(newReadCommand(configuration.readerFactory))
 	command.AddCommand(newVersionCommand(info))
 
 	return command
