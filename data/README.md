@@ -24,4 +24,22 @@ changes in the pull request.
 
 Verse text must remain unchanged after UTF-8 decoding and removal of the source
 record separator. Reference identifiers, book ordering, and other application
-metadata may be normalized separately.
+metadata may be normalized separately. A source may contain an addressable verse
+with an empty text payload; the importer preserves both the reference and the
+empty payload.
+
+## Importing WEBP
+
+Download the official archive linked by the manifest, then run:
+
+```console
+go run ./cmd/bible-import \
+  --manifest data/translations/engwebp/manifest.json \
+  --archive /path/to/engwebp_vpl.zip \
+  --output data/generated/engwebp.db
+```
+
+The command refuses to overwrite an existing database. Before parsing any
+content it verifies the complete archive against the manifest checksum. It then
+validates book order, contiguous references, duplicate references, canonical
+boundaries, and expected totals before atomically publishing the SQLite file.

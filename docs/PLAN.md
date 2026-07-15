@@ -110,8 +110,8 @@ or concrete database types.
 
 Progress: ADR 0001 selects the World English Bible Protestant Edition and its
 official verse-per-line source. A validated provenance manifest pins the first
-source snapshot. The importer, normalized schema, and embedded database remain
-to be implemented.
+source snapshot. The deterministic VPL importer and normalized SQLite schema are
+implemented. Embedding the generated database in the reader remains.
 
 - Select and verify a redistributable first translation.
 - Document provenance, license, attribution, and source checksum.
