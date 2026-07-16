@@ -54,6 +54,11 @@ bible="$work/bible"
 config_home="$work/config"
 
 test -x "$bible"
+test -f "$work/LICENSE"
+test -f "$work/THIRD_PARTY_NOTICES.md"
+grep -F "MIT License" "$work/LICENSE"
+grep -F "World English Bible — Protestant Edition" "$work/THIRD_PARTY_NOTICES.md"
+grep -F "public domain" "$work/THIRD_PARTY_NOTICES.md"
 version_output=$("$bible" version)
 grep -F "bible $version" <<<"$version_output"
 grep -F "commit: $commit" <<<"$version_output"
