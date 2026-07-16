@@ -1,10 +1,11 @@
 package render
 
 const (
-	ansiReset = "\x1b[0m"
-	ansiBold  = "\x1b[1m"
-	ansiDim   = "\x1b[2m"
-	ansiCyan  = "\x1b[36m"
+	ansiReset  = "\x1b[0m"
+	ansiBold   = "\x1b[1m"
+	ansiDim    = "\x1b[2m"
+	ansiCyan   = "\x1b[36m"
+	ansiYellow = "\x1b[33m"
 )
 
 // Options controls whether output is machine-friendly or decorated for a terminal.

@@ -64,7 +64,7 @@ func OpenEmbedded(ctx context.Context) (*Reader, error) {
 		database.Close()
 		return nil, fmt.Errorf("read embedded schema version: %w", err)
 	}
-	if schemaVersion != 1 {
+	if schemaVersion != 2 {
 		connection.Close()
 		database.Close()
 		return nil, fmt.Errorf("unsupported embedded schema version %d", schemaVersion)

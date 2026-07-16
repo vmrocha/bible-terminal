@@ -14,7 +14,7 @@ import (
 func TestEmbeddedDatabase(t *testing.T) {
 	digest := sha256.Sum256(embeddedWEBP)
 	got := hex.EncodeToString(digest[:])
-	const want = "1164fb6d921762958f99c904742ff782d3bf5948d64e82bdcb5c677176ccd337"
+	const want = "5fb07654e06c6e6999d57b101b3d37d04e0b32d124ee6c1eac252cb542a354ea"
 	if got != want {
 		t.Fatalf("embedded database checksum is %s, want %s", got, want)
 	}
@@ -25,15 +25,15 @@ func TestEmbeddedDatabase(t *testing.T) {
 	}
 	t.Cleanup(func() { _ = reader.Close() })
 
-	var books, verses int
+	var books, verses, indexedVerses int
 	if err := reader.connection.QueryRowContext(
 		context.Background(),
-		"SELECT (SELECT count(*) FROM books), (SELECT count(*) FROM verses)",
-	).Scan(&books, &verses); err != nil {
+		"SELECT (SELECT count(*) FROM books), (SELECT count(*) FROM verses), (SELECT count(*) FROM verses_fts)",
+	).Scan(&books, &verses, &indexedVerses); err != nil {
 		t.Fatalf("query embedded totals: %v", err)
 	}
-	if books != 66 || verses != 31103 {
-		t.Fatalf("embedded totals are %d books and %d verses", books, verses)
+	if books != 66 || verses != 31103 || indexedVerses != verses {
+		t.Fatalf("embedded totals are %d books, %d verses, and %d indexed verses", books, verses, indexedVerses)
 	}
 
 	if _, err := reader.connection.ExecContext(context.Background(), "DELETE FROM verses"); err == nil {

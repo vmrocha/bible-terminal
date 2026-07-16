@@ -45,6 +45,7 @@ func TestHelp(t *testing.T) {
 		"Read the Bible from your terminal",
 		"books",
 		"read",
+		"search",
 		"version",
 		"--plain",
 		"--no-color",
