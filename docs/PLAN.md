@@ -157,6 +157,11 @@ returns results within an agreed performance budget.
 
 ### M4 — Preferences and distribution
 
+Progress: tagged release automation builds checksummed macOS and Linux archives
+for AMD64 and ARM64, installation instructions are documented, and the CLI
+generates Bash, Zsh, Fish, and PowerShell completion scripts. Platform-specific
+configuration paths and persistent display preferences remain.
+
 - Add platform-appropriate configuration paths.
 - Remember the preferred translation and optional display preferences.
 - Produce checksummed release binaries.

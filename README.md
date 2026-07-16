@@ -114,6 +114,13 @@ make check
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the development workflow and Bible
 text licensing requirements.
 
+## Installation
+
+Tagged releases ship checksummed single-binary archives for macOS and Linux on
+Intel/AMD64 and ARM64. See the [installation guide](docs/INSTALL.md) for archive
+verification, installation, source builds, and Bash, Zsh, Fish, and PowerShell
+completion setup.
+
 ## License
 
 No project license has been selected yet. Bible translations have their own
