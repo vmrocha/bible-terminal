@@ -108,10 +108,10 @@ or concrete database types.
 
 ### M1 — Licensed text pipeline
 
-Progress: ADR 0001 selects the World English Bible Protestant Edition and its
-official verse-per-line source. A validated provenance manifest pins the first
+Progress: complete. ADR 0001 selects the World English Bible Protestant Edition
+and its official verse-per-line source. A validated provenance manifest pins the
 source snapshot. The deterministic VPL importer and normalized SQLite schema are
-implemented. Embedding the generated database in the reader remains.
+implemented, and the generated database is embedded in the reader.
 
 - Select and verify a redistributable first translation.
 - Document provenance, license, attribution, and source checksum.
@@ -124,11 +124,12 @@ book, chapter, and verse totals, and all required attribution is present.
 
 ### M2 — Reading
 
-Progress: the validated WEBP database is embedded directly in the executable.
-The first reader supports chapters, individual verses, inclusive same-chapter
-ranges, aliases for all 66 books, cross-book previous/next chapter navigation,
-book discovery, and stable plain output. Automatic non-TTY detection and styled
-TTY output remain.
+Progress: complete. The validated WEBP database is embedded directly in the
+executable. The reader supports chapters, individual verses, inclusive
+same-chapter ranges, aliases for all 66 books, cross-book previous/next chapter
+navigation, and book discovery. Interactive output uses restrained styling;
+non-TTY output automatically switches to stable plain text without ANSI escape
+sequences. Global `--plain` and `--no-color` flags provide explicit control.
 
 - Implement the reference grammar and aliases.
 - Implement chapter, verse, and range reads.

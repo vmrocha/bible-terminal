@@ -6,7 +6,7 @@ import (
 )
 
 func TestBooksCommand(t *testing.T) {
-	output, err := execute(t, "books")
+	output, err := execute(t, "books", "--no-color")
 	if err != nil {
 		t.Fatalf("execute books: %v", err)
 	}
@@ -16,7 +16,7 @@ func TestBooksCommand(t *testing.T) {
 }
 
 func TestBooksCommandPlain(t *testing.T) {
-	output, err := execute(t, "books", "--plain")
+	output, err := execute(t, "--plain", "books")
 	if err != nil {
 		t.Fatalf("execute books --plain: %v", err)
 	}

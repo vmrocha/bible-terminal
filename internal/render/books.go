@@ -9,10 +9,10 @@ import (
 )
 
 // Books writes the accepted book names, source codes, and aliases.
-func Books(writer io.Writer, entries []canon.Entry, plain bool) error {
+func Books(writer io.Writer, entries []canon.Entry, options Options) error {
 	for _, entry := range entries {
 		aliases := strings.Join(entry.Aliases, ", ")
-		if plain {
+		if options.Plain {
 			if _, err := fmt.Fprintf(
 				writer,
 				"%s\t%s\t%s\t%s\n",
@@ -27,22 +27,26 @@ func Books(writer io.Writer, entries []canon.Entry, plain bool) error {
 		}
 
 		if entry.Book.Position == 1 {
-			if _, err := fmt.Fprintln(writer, "Old Testament"); err != nil {
+			heading := styled("Old Testament", ansiBold+ansiCyan, options.Color)
+			if _, err := fmt.Fprintln(writer, heading); err != nil {
 				return err
 			}
 		}
 		if entry.Book.Position == 40 {
-			if _, err := fmt.Fprintln(writer, "\nNew Testament"); err != nil {
+			heading := styled("New Testament", ansiBold+ansiCyan, options.Color)
+			if _, err := fmt.Fprintln(writer, "\n"+heading); err != nil {
 				return err
 			}
 		}
+		position := styled(fmt.Sprintf("%2d", entry.Book.Position), ansiDim, options.Color)
+		bookAliases := styled(aliases, ansiDim, options.Color)
 		if _, err := fmt.Fprintf(
 			writer,
-			"%2d  %-17s %-3s  %s\n",
-			entry.Book.Position,
+			"%s  %-17s %-3s  %s\n",
+			position,
 			entry.Book.Name,
 			entry.Book.SourceCode,
-			aliases,
+			bookAliases,
 		); err != nil {
 			return err
 		}

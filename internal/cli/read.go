@@ -3,6 +3,7 @@ package cli
 import (
 	"context"
 	"errors"
+	"io"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -23,6 +24,7 @@ type ReaderFactory func(context.Context) (PassageReader, error)
 
 type configuration struct {
 	readerFactory ReaderFactory
+	isTerminal    func(io.Writer) bool
 }
 
 // Option configures optional root-command dependencies.
@@ -35,8 +37,7 @@ func WithReaderFactory(factory ReaderFactory) Option {
 	}
 }
 
-func newReadCommand(factory ReaderFactory) *cobra.Command {
-	var plain bool
+func newReadCommand(factory ReaderFactory, settings *outputSettings, isTerminal func(io.Writer) bool) *cobra.Command {
 	var next bool
 	var previous bool
 	command := &cobra.Command{
@@ -83,11 +84,19 @@ func newReadCommand(factory ReaderFactory) *cobra.Command {
 				return closeErr
 			}
 
-			return render.Passage(command.OutOrStdout(), passage, plain)
+			return render.Passage(command.OutOrStdout(), passage, renderOptions(command, settings, isTerminal))
 		},
 	}
-	command.Flags().BoolVar(&plain, "plain", false, "emit stable tab-separated verse lines")
 	command.Flags().BoolVar(&next, "next", false, "read the next chapter")
 	command.Flags().BoolVar(&previous, "previous", false, "read the previous chapter")
 	return command
+}
+
+func renderOptions(command *cobra.Command, settings *outputSettings, isTerminal func(io.Writer) bool) render.Options {
+	interactive := isTerminal != nil && isTerminal(command.OutOrStdout())
+	plain := settings.plain || !interactive
+	return render.Options{
+		Plain: plain,
+		Color: interactive && !plain && !settings.noColor,
+	}
 }

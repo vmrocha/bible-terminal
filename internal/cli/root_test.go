@@ -2,6 +2,7 @@ package cli
 
 import (
 	"bytes"
+	"io"
 	"strings"
 	"testing"
 
@@ -22,6 +23,9 @@ func executeWithOptions(t *testing.T, options []Option, args ...string) (string,
 	t.Helper()
 
 	output := new(bytes.Buffer)
+	options = append(options, func(configuration *configuration) {
+		configuration.isTerminal = func(io.Writer) bool { return true }
+	})
 	command := New(testBuild, options...)
 	command.SetOut(output)
 	command.SetErr(output)
@@ -42,6 +46,8 @@ func TestHelp(t *testing.T) {
 		"books",
 		"read",
 		"version",
+		"--plain",
+		"--no-color",
 		"--help",
 	} {
 		if !strings.Contains(output, expected) {

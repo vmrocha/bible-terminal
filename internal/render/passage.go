@@ -10,11 +10,11 @@ import (
 )
 
 // Passage writes a Bible passage in human-readable or stable plain form.
-func Passage(writer io.Writer, passage bible.Passage, plain bool) error {
+func Passage(writer io.Writer, passage bible.Passage, options Options) error {
 	if len(passage.Verses) == 0 {
 		return errors.New("render passage: no verses")
 	}
-	if plain {
+	if options.Plain {
 		for _, verse := range passage.Verses {
 			if _, err := fmt.Fprintf(
 				writer,
@@ -30,12 +30,15 @@ func Passage(writer io.Writer, passage bible.Passage, plain bool) error {
 		return nil
 	}
 
-	if _, err := fmt.Fprintf(writer, "%s · %s\n\n", passageTitle(passage), passage.Translation); err != nil {
+	title := styled(passageTitle(passage), ansiBold+ansiCyan, options.Color)
+	translation := styled(passage.Translation, ansiDim, options.Color)
+	if _, err := fmt.Fprintf(writer, "%s · %s\n\n", title, translation); err != nil {
 		return err
 	}
 	width := len(strconv.Itoa(passage.Verses[len(passage.Verses)-1].Number))
 	for _, verse := range passage.Verses {
-		if _, err := fmt.Fprintf(writer, "%*d  %s\n", width, verse.Number, verse.Text); err != nil {
+		number := styled(fmt.Sprintf("%*d", width, verse.Number), ansiBold+ansiCyan, options.Color)
+		if _, err := fmt.Fprintf(writer, "%s  %s\n", number, verse.Text); err != nil {
 			return err
 		}
 	}

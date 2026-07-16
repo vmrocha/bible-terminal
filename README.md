@@ -6,8 +6,10 @@ without leaving the terminal.
 ## Status
 
 The Go CLI is under active development and includes an offline WEBP reader
-backed by an embedded SQLite database. See [docs/PLAN.md](docs/PLAN.md) for the
-product scope, architecture, milestones, and acceptance criteria.
+backed by an embedded SQLite database. Reading output is styled when used in a
+terminal and automatically switches to stable plain text when redirected. See
+[docs/PLAN.md](docs/PLAN.md) for the product scope, architecture, milestones,
+and acceptance criteria.
 
 ## Product direction
 
@@ -39,6 +41,18 @@ bible books
 `bible books` lists all canonical names, source codes, and accepted aliases.
 Chapter navigation crosses book boundaries, so moving forward from John 21 reads
 Acts 1 and moving backward from Matthew 1 reads Malachi 4.
+
+Output adapts to its destination:
+
+```console
+bible read "Psalm 23"          # styled terminal output
+bible read "Psalm 23" --plain  # stable tab-separated output
+bible read "Psalm 23" | less   # automatically plain, with no ANSI escapes
+bible read "Psalm 23" --no-color # readable layout without terminal colors
+```
+
+`--plain` and `--no-color` are global flags and may appear before or after the
+subcommand.
 
 The first release should:
 
