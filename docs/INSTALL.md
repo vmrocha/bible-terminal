@@ -11,16 +11,14 @@ Tagged releases provide single-binary archives for:
 
 Download the archive for your platform and `checksums.txt` from the matching
 [GitHub release](https://github.com/vmrocha/bible-terminal/releases). For
-example, for version `0.1.0` on an Apple silicon Mac:
-
-The repository is currently private, so the downloading GitHub account must
-have access and the GitHub CLI must be authenticated with `gh auth login`.
+example, once the repository is public, download version `0.1.0` for an Apple
+silicon Mac without a GitHub account or GitHub CLI:
 
 ```console
-gh release download v0.1.0 \
-  --repo vmrocha/bible-terminal \
-  --pattern bible-terminal_0.1.0_darwin_arm64.tar.gz \
-  --pattern checksums.txt
+curl --fail --location --remote-name \
+  https://github.com/vmrocha/bible-terminal/releases/download/v0.1.0/bible-terminal_0.1.0_darwin_arm64.tar.gz
+curl --fail --location --remote-name \
+  https://github.com/vmrocha/bible-terminal/releases/download/v0.1.0/checksums.txt
 grep 'bible-terminal_0.1.0_darwin_arm64.tar.gz$' checksums.txt | shasum -a 256 -c -
 tar -xzf bible-terminal_0.1.0_darwin_arm64.tar.gz
 install -d ~/.local/bin
@@ -76,7 +74,7 @@ PowerShell completion is also available through `bible completion powershell`.
 Building from source requires Go 1.26 or newer and Make:
 
 ```console
-gh repo clone vmrocha/bible-terminal
+git clone https://github.com/vmrocha/bible-terminal.git
 cd bible-terminal
 make check
 install -d ~/.local/bin
