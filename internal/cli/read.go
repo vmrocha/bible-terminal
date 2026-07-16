@@ -27,6 +27,7 @@ type configuration struct {
 	searchFactory      SearcherFactory
 	translationFactory TranslationReaderFactory
 	randomFactory      RandomReaderFactory
+	preferenceStore    PreferenceStore
 	isTerminal         func(io.Writer) bool
 }
 
