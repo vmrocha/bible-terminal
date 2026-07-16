@@ -23,9 +23,11 @@ type PassageReader interface {
 type ReaderFactory func(context.Context) (PassageReader, error)
 
 type configuration struct {
-	readerFactory ReaderFactory
-	searchFactory SearcherFactory
-	isTerminal    func(io.Writer) bool
+	readerFactory      ReaderFactory
+	searchFactory      SearcherFactory
+	translationFactory TranslationReaderFactory
+	randomFactory      RandomReaderFactory
+	isTerminal         func(io.Writer) bool
 }
 
 // Option configures optional root-command dependencies.
