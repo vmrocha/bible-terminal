@@ -32,3 +32,22 @@ jobs:
 
       - name: Run checks
         run: make check
+
+      - name: Validate release archives
+        if: runner.os == 'Linux'
+        run: |
+          commit=$(git rev-parse HEAD)
+          ./scripts/build-release.sh \
+            v0.0.0-test \
+            "$commit" \
+            1970-01-01T00:00:00Z \
+            0 \
+            "$RUNNER_TEMP/release-dist"
+          (
+            cd "$RUNNER_TEMP/release-dist"
+            sha256sum --check checksums.txt
+            test "$(find . -name 'bible-terminal_*.tar.gz' | wc -l)" -eq 4
+            mkdir smoke
+            tar -xzf bible-terminal_0.0.0-test_linux_amd64.tar.gz -C smoke
+            smoke/bible version | grep -F 'bible v0.0.0-test'
+          )

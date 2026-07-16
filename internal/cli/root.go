@@ -37,6 +37,7 @@ func New(info buildinfo.Info, options ...Option) *cobra.Command {
 	command.AddCommand(newSearchCommand(configuration.searchFactory, settings, configuration.isTerminal))
 	command.AddCommand(newTranslationsCommand(configuration.translationFactory, settings, configuration.isTerminal))
 	command.AddCommand(newRandomCommand(configuration.randomFactory, settings, configuration.isTerminal))
+	command.AddCommand(newCompletionCommand())
 	command.AddCommand(newVersionCommand(info))
 
 	return command
