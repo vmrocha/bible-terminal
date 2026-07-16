@@ -7,4 +7,11 @@ type SearchResult struct {
 	Chapter     int
 	Verse       int
 	Text        string
+	Highlights  []TextRange
+}
+
+// TextRange identifies a half-open UTF-8 byte range within a result's Text.
+type TextRange struct {
+	Start int
+	End   int
 }

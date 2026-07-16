@@ -64,6 +64,10 @@ func TestSearchCommandAutomaticallyUsesPlainOutputWhenRedirected(t *testing.T) {
 		Chapter: 4,
 		Verse:   10,
 		Text:    "Living water.",
+		Highlights: []bible.TextRange{
+			{Start: 0, End: 6},
+			{Start: 7, End: 12},
+		},
 	}}}
 	factory := func(context.Context) (Searcher, error) { return searcher, nil }
 	output := new(bytes.Buffer)
@@ -80,6 +84,34 @@ func TestSearchCommandAutomaticallyUsesPlainOutputWhenRedirected(t *testing.T) {
 	}
 	if strings.Contains(output.String(), "\x1b[") {
 		t.Fatalf("redirected output contains ANSI escapes: %q", output.String())
+	}
+}
+
+func TestSearchCommandHighlightsInteractiveMatches(t *testing.T) {
+	searcher := &stubSearcher{results: []bible.SearchResult{{
+		Translation: "WEBP",
+		Book:        bible.Book{Name: "John"},
+		Chapter:     4,
+		Verse:       10,
+		Text:        "Living water.",
+		Highlights: []bible.TextRange{
+			{Start: 0, End: 6},
+			{Start: 7, End: 12},
+		},
+	}}}
+	factory := func(context.Context) (Searcher, error) { return searcher, nil }
+
+	output, err := executeWithOptions(t, []Option{WithSearcherFactory(factory)}, "search", "living water")
+	if err != nil {
+		t.Fatalf("execute search: %v", err)
+	}
+	for _, expected := range []string{
+		"\x1b[1m\x1b[33mLiving\x1b[0m",
+		"\x1b[1m\x1b[33mwater\x1b[0m",
+	} {
+		if !strings.Contains(output, expected) {
+			t.Fatalf("interactive output does not contain %q: %q", expected, output)
+		}
 	}
 }
 

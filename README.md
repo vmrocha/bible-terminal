@@ -56,7 +56,8 @@ bible read "Psalm 23" --no-color # readable layout without terminal colors
 subcommand.
 
 Search works entirely offline and returns verses containing every query token,
-ranked by relevance with canonical Scripture order as a stable tie-breaker:
+ranked by relevance with canonical Scripture order as a stable tie-breaker.
+Matching words are emphasized in interactive colored output:
 
 ```console
 bible search "living water"
@@ -67,6 +68,8 @@ bible search "kingdom of God" --plain
 The default result limit is 20. Use `--limit` (or `-n`) to request between 1 and
 100 results. Punctuation and case do not affect matching. A plain search with no
 matches writes no output, making it safe to use in shell pipelines.
+Match highlighting never changes `--no-color`, `--plain`, or redirected verse
+text.
 
 The first release should:
 
