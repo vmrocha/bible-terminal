@@ -157,17 +157,17 @@ returns results within an agreed performance budget.
 
 ### M4 — Preferences and distribution
 
-Progress: tagged release automation builds checksummed macOS and Linux archives
-for AMD64 and ARM64, installation instructions are documented, and the CLI
-generates Bash, Zsh, Fish, and PowerShell completion scripts. macOS and Linux
-share an XDG-compatible configuration path, and versioned persistent
-preferences remember translation and display defaults. Release validation is
-the remaining work.
+Progress: complete. Tagged release automation builds checksummed macOS and
+Linux archives for AMD64 and ARM64, installation and release procedures are
+documented, and native macOS/Linux CI executes the matching packaged binary.
+The CLI generates Bash, Zsh, Fish, and PowerShell completion scripts. macOS and
+Linux share an XDG-compatible configuration path, and versioned persistent
+preferences remember translation and display defaults.
 
 - Add a consistent, documented configuration path. (complete)
 - Remember the preferred translation and optional display preferences. (complete)
-- Produce checksummed release binaries.
-- Add installation documentation and shell completion.
+- Produce checksummed release binaries. (complete)
+- Add installation documentation and shell completion. (complete)
 
 **Exit criteria:** a new user can install a release artifact and read a verse
 without installing Go or downloading data separately.

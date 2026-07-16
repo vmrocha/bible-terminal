@@ -29,19 +29,14 @@ write data to standard output and diagnostics to standard error.
 
 ## Releases
 
+Follow the complete checklist in [docs/RELEASING.md](docs/RELEASING.md).
 Pushing a semantic-version tag such as `v0.1.0` runs the release workflow. It
 reruns the full validation suite, cross-builds CGO-free macOS and Linux binaries
 for AMD64 and ARM64, creates deterministic `tar.gz` archives, writes
 `checksums.txt`, and publishes a GitHub release.
 
-Create a release only from a reviewed, green commit on `main`:
-
-```console
-git tag -a v0.1.0 -m "Bible Terminal v0.1.0"
-git push origin v0.1.0
-```
-
-Do not reuse or move a published release tag.
+Create a release only from a reviewed, green commit on `main`, and do not reuse
+or move a published release tag.
 
 ## Bible text and licensing
 

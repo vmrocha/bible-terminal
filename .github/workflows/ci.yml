@@ -22,7 +22,7 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Go
         uses: actions/setup-go@v6
@@ -33,21 +33,66 @@ jobs:
       - name: Run checks
         run: make check
 
-      - name: Validate release archives
-        if: runner.os == 'Linux'
+  release-archives:
+    name: Build release archives
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Build release archives
         run: |
-          commit=$(git rev-parse HEAD)
           ./scripts/build-release.sh \
             v0.0.0-test \
-            "$commit" \
+            "$GITHUB_SHA" \
             1970-01-01T00:00:00Z \
             0 \
             "$RUNNER_TEMP/release-dist"
-          (
-            cd "$RUNNER_TEMP/release-dist"
-            sha256sum --check checksums.txt
-            test "$(find . -name 'bible-terminal_*.tar.gz' | wc -l)" -eq 4
-            mkdir smoke
-            tar -xzf bible-terminal_0.0.0-test_linux_amd64.tar.gz -C smoke
-            smoke/bible version | grep -F 'bible v0.0.0-test'
-          )
+
+      - name: Validate checksums and archive count
+        run: |
+          cd "$RUNNER_TEMP/release-dist"
+          sha256sum --check checksums.txt
+          test "$(find . -name 'bible-terminal_*.tar.gz' | wc -l)" -eq 4
+
+      - name: Upload release archives
+        uses: actions/upload-artifact@v7
+        with:
+          name: release-dist
+          path: ${{ runner.temp }}/release-dist
+          if-no-files-found: error
+
+  package-smoke:
+    name: Package smoke (${{ matrix.os }})
+    needs: release-archives
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Download release archives
+        uses: actions/download-artifact@v8
+        with:
+          name: release-dist
+          path: ${{ runner.temp }}/release-dist
+
+      - name: Exercise packaged binary
+        run: |
+          ./scripts/smoke-release.sh \
+            v0.0.0-test \
+            "$GITHUB_SHA" \
+            "$RUNNER_TEMP/release-dist"
