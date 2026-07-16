@@ -142,10 +142,11 @@ escape sequences.
 
 ### M3 — Search and discovery
 
-Progress: offline full-text search is implemented with a deterministic SQLite
-FTS5 index, relevance ranking, stable canonical tie-breaking, bounded result
-limits, adaptive terminal/plain rendering, and representative tests. Translation
-listing and random verse discovery remain.
+Progress: complete. Offline full-text search uses a deterministic SQLite FTS5
+index, relevance ranking, stable canonical tie-breaking, bounded result limits,
+adaptive terminal/plain rendering, and exact interactive match highlighting.
+Book and translation discovery are implemented, including complete attribution
+metadata, and random selection is uniform across all bundled verses.
 
 - Add full-text search.
 - Add book listing, translation listing, and random verse commands.

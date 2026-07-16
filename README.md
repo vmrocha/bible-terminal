@@ -25,7 +25,7 @@ bible books
 bible random
 ```
 
-The currently implemented reading forms are:
+The currently implemented commands include:
 
 ```console
 bible read John 3
@@ -37,6 +37,8 @@ bible read Matthew 1 --previous
 bible read "1 Cor 13"
 bible books
 bible search "living water"
+bible random
+bible translations
 ```
 
 `bible books` lists all canonical names, source codes, and accepted aliases.
@@ -70,6 +72,18 @@ The default result limit is 20. Use `--limit` (or `-n`) to request between 1 and
 matches writes no output, making it safe to use in shell pipelines.
 Match highlighting never changes `--no-color`, `--plain`, or redirected verse
 text.
+
+Discovery commands also work offline:
+
+```console
+bible random
+bible random --plain
+bible translations
+```
+
+`bible random` selects uniformly from all 31,103 bundled WEBP verses.
+`bible translations` reports the bundled text edition, language, canon, source,
+public-domain rights notice, trademark notice, and publisher text policy.
 
 The first release should:
 
