@@ -67,6 +67,8 @@ for target in "${targets[@]}"; do
     -o "$stage/bible" \
     ./cmd/bible
 
+  cp LICENSE THIRD_PARTY_NOTICES.md "$stage/"
+
   tar \
     --sort=name \
     --mtime="@$source_epoch" \
@@ -75,7 +77,7 @@ for target in "${targets[@]}"; do
     --numeric-owner \
     -C "$stage" \
     -cf - \
-    bible |
+    LICENSE THIRD_PARTY_NOTICES.md bible |
     gzip -n >"$output/$name.tar.gz"
 done
 

@@ -152,4 +152,7 @@ completion setup.
 Bible Terminal's source code is licensed under the [MIT License](LICENSE).
 Bible translations are separate works with their own copyright and
 redistribution terms; no translation should be bundled until its license and
-required attribution have been verified and documented.
+required attribution have been verified and documented. See
+[Third-Party Notices](THIRD_PARTY_NOTICES.md) for the bundled World English
+Bible text's provenance, public-domain status, trademark notice, and text
+policy.
