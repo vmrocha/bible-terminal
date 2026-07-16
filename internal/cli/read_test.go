@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"bytes"
 	"context"
 	"errors"
 	"strings"
@@ -45,7 +46,7 @@ func TestReadCommand(t *testing.T) {
 	}}
 	factory := func(context.Context) (PassageReader, error) { return reader, nil }
 
-	output, err := executeWithOptions(t, []Option{WithReaderFactory(factory)}, "read", "John", "3:16")
+	output, err := executeWithOptions(t, []Option{WithReaderFactory(factory)}, "read", "John", "3:16", "--no-color")
 	if err != nil {
 		t.Fatalf("execute read: %v", err)
 	}
@@ -54,6 +55,74 @@ func TestReadCommand(t *testing.T) {
 	}
 	if !reader.closed {
 		t.Fatal("reader was not closed")
+	}
+}
+
+func TestReadCommandStylesInteractiveOutput(t *testing.T) {
+	reader := &stubReader{passage: bible.Passage{
+		Translation: "WEBP",
+		Book:        bible.Book{Name: "John"},
+		Chapter:     3,
+		StartVerse:  16,
+		EndVerse:    16,
+		Verses:      []bible.Verse{{Chapter: 3, Number: 16, Text: "For God so loved…"}},
+	}}
+	factory := func(context.Context) (PassageReader, error) { return reader, nil }
+
+	output, err := executeWithOptions(t, []Option{WithReaderFactory(factory)}, "read", "John", "3:16")
+	if err != nil {
+		t.Fatalf("execute read: %v", err)
+	}
+	if !strings.Contains(output, "\x1b[") {
+		t.Fatalf("interactive output is not styled: %q", output)
+	}
+}
+
+func TestReadCommandAutomaticallyUsesPlainOutputWhenRedirected(t *testing.T) {
+	reader := &stubReader{passage: bible.Passage{
+		Translation: "WEBP",
+		Book:        bible.Book{Name: "John"},
+		Chapter:     3,
+		StartVerse:  16,
+		EndVerse:    16,
+		Verses:      []bible.Verse{{Chapter: 3, Number: 16, Text: "For God so loved…"}},
+	}}
+	factory := func(context.Context) (PassageReader, error) { return reader, nil }
+	output := new(bytes.Buffer)
+	command := New(testBuild, WithReaderFactory(factory))
+	command.SetOut(output)
+	command.SetErr(output)
+	command.SetArgs([]string{"read", "John", "3:16"})
+
+	if err := command.Execute(); err != nil {
+		t.Fatalf("execute redirected read: %v", err)
+	}
+	if want := "John 3:16\tFor God so loved…\n"; output.String() != want {
+		t.Fatalf("unexpected redirected output: %q", output.String())
+	}
+	if strings.Contains(output.String(), "\x1b[") {
+		t.Fatalf("redirected output contains ANSI escapes: %q", output.String())
+	}
+}
+
+func TestReadCommandPlainOverridesInteractiveOutput(t *testing.T) {
+	reader := &stubReader{passage: bible.Passage{
+		Book:    bible.Book{Name: "Psalm"},
+		Chapter: 23,
+		Verses:  []bible.Verse{{Chapter: 23, Number: 1, Text: "Yahweh is my shepherd."}},
+	}}
+	factory := func(context.Context) (PassageReader, error) { return reader, nil }
+
+	output, err := executeWithOptions(
+		t,
+		[]Option{WithReaderFactory(factory)},
+		"--plain", "read", "Psalm", "23",
+	)
+	if err != nil {
+		t.Fatalf("execute read --plain: %v", err)
+	}
+	if want := "Psalm 23:1\tYahweh is my shepherd.\n"; output != want {
+		t.Fatalf("unexpected plain output: %q", output)
 	}
 }
 
