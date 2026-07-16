@@ -24,6 +24,7 @@ type ReaderFactory func(context.Context) (PassageReader, error)
 
 type configuration struct {
 	readerFactory ReaderFactory
+	searchFactory SearcherFactory
 	isTerminal    func(io.Writer) bool
 }
 

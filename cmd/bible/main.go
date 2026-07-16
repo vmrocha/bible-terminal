@@ -16,6 +16,9 @@ func main() {
 		cli.WithReaderFactory(func(ctx context.Context) (cli.PassageReader, error) {
 			return storage.OpenEmbedded(ctx)
 		}),
+		cli.WithSearcherFactory(func(ctx context.Context) (cli.Searcher, error) {
+			return storage.OpenEmbedded(ctx)
+		}),
 	)
 	if err := command.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err)

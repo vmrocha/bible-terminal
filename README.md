@@ -36,6 +36,7 @@ bible read John 3 --next
 bible read Matthew 1 --previous
 bible read "1 Cor 13"
 bible books
+bible search "living water"
 ```
 
 `bible books` lists all canonical names, source codes, and accepted aliases.
@@ -53,6 +54,19 @@ bible read "Psalm 23" --no-color # readable layout without terminal colors
 
 `--plain` and `--no-color` are global flags and may appear before or after the
 subcommand.
+
+Search works entirely offline and returns verses containing every query token,
+ranked by relevance with canonical Scripture order as a stable tie-breaker:
+
+```console
+bible search "living water"
+bible search "faith hope love" --limit 10
+bible search "kingdom of God" --plain
+```
+
+The default result limit is 20. Use `--limit` (or `-n`) to request between 1 and
+100 results. Punctuation and case do not affect matching. A plain search with no
+matches writes no output, making it safe to use in shell pipelines.
 
 The first release should:
 

@@ -34,6 +34,7 @@ func New(info buildinfo.Info, options ...Option) *cobra.Command {
 	command.PersistentFlags().BoolVar(&settings.noColor, "no-color", false, "disable terminal colors")
 	command.AddCommand(newBooksCommand(settings, configuration.isTerminal))
 	command.AddCommand(newReadCommand(configuration.readerFactory, settings, configuration.isTerminal))
+	command.AddCommand(newSearchCommand(configuration.searchFactory, settings, configuration.isTerminal))
 	command.AddCommand(newVersionCommand(info))
 
 	return command

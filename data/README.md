@@ -1,8 +1,8 @@
 # Translation data
 
-This directory contains source manifests and, later, deterministic import
-tooling. A manifest records what may be downloaded and imported; it does not
-contain Bible text.
+This directory contains source manifests for the deterministic import tooling.
+A manifest records what may be downloaded and imported; it does not contain
+Bible text.
 
 ## Provenance contract
 
@@ -43,3 +43,6 @@ The command refuses to overwrite an existing database. Before parsing any
 content it verifies the complete archive against the manifest checksum. It then
 validates book order, contiguous references, duplicate references, canonical
 boundaries, and expected totals before atomically publishing the SQLite file.
+The generated database also contains an FTS5 token index over the unchanged
+verse text. The index is rebuilt in canonical verse order so repeated imports of
+the same pinned archive remain byte-for-byte reproducible.

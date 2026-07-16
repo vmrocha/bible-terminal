@@ -1,4 +1,4 @@
-PRAGMA user_version = 1;
+PRAGMA user_version = 2;
 
 CREATE TABLE translations (
     id TEXT PRIMARY KEY,
@@ -33,12 +33,20 @@ CREATE TABLE books (
 ) STRICT;
 
 CREATE TABLE verses (
+    id INTEGER PRIMARY KEY,
     translation_id TEXT NOT NULL,
     book_id TEXT NOT NULL,
     chapter INTEGER NOT NULL CHECK (chapter > 0),
     verse INTEGER NOT NULL CHECK (verse > 0),
     text TEXT NOT NULL,
-    PRIMARY KEY (translation_id, book_id, chapter, verse),
+    UNIQUE (translation_id, book_id, chapter, verse),
     FOREIGN KEY (translation_id, book_id)
         REFERENCES books (translation_id, id) ON DELETE CASCADE
-) STRICT, WITHOUT ROWID;
+) STRICT;
+
+CREATE VIRTUAL TABLE verses_fts USING fts5(
+    text,
+    content = 'verses',
+    content_rowid = 'id',
+    tokenize = 'unicode61 remove_diacritics 2'
+);

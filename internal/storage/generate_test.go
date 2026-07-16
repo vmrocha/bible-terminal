@@ -44,8 +44,16 @@ func TestGenerate(t *testing.T) {
 	if err := database.QueryRow("PRAGMA user_version").Scan(&schemaVersion); err != nil {
 		t.Fatalf("query schema version: %v", err)
 	}
-	if schemaVersion != 1 {
-		t.Fatalf("schema version is %d, want 1", schemaVersion)
+	if schemaVersion != 2 {
+		t.Fatalf("schema version is %d, want 2", schemaVersion)
+	}
+
+	var indexed int
+	if err := database.QueryRow("SELECT count(*) FROM verses_fts WHERE verses_fts MATCH 'Second'").Scan(&indexed); err != nil {
+		t.Fatalf("query generated search index: %v", err)
+	}
+	if indexed != 1 {
+		t.Fatalf("search index returned %d verses, want 1", indexed)
 	}
 }
 

@@ -109,6 +109,9 @@ func populate(ctx context.Context, path string, manifest translation.Manifest, d
 	if err := insertVerses(ctx, transaction, manifest.ID, dataset.Verses); err != nil {
 		return err
 	}
+	if err := buildSearchIndex(ctx, transaction); err != nil {
+		return err
+	}
 	if err := transaction.Commit(); err != nil {
 		return fmt.Errorf("commit database transaction: %w", err)
 	}
@@ -195,6 +198,13 @@ func insertVerses(ctx context.Context, transaction *sql.Tx, translationID string
 		); err != nil {
 			return fmt.Errorf("insert verse %s %d:%d: %w", verse.BookID, verse.Chapter, verse.Number, err)
 		}
+	}
+	return nil
+}
+
+func buildSearchIndex(ctx context.Context, transaction *sql.Tx) error {
+	if _, err := transaction.ExecContext(ctx, "INSERT INTO verses_fts(verses_fts) VALUES('rebuild')"); err != nil {
+		return fmt.Errorf("build search index: %w", err)
 	}
 	return nil
 }
