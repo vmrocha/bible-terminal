@@ -39,6 +39,7 @@ bible books
 bible search "living water"
 bible random
 bible translations
+bible config show
 ```
 
 `bible books` lists all canonical names, source codes, and accepted aliases.
@@ -84,6 +85,31 @@ bible translations
 `bible random` selects uniformly from all 31,103 bundled WEBP verses.
 `bible translations` reports the bundled text edition, language, canon, source,
 public-domain rights notice, trademark notice, and publisher text policy.
+
+## Configuration
+
+Bible Terminal uses the same configuration convention on macOS and Linux. The
+path is resolved in this order:
+
+1. `$BIBLE_TERMINAL_CONFIG_HOME/config.json`
+2. `$XDG_CONFIG_HOME/bible-terminal/config.json`
+3. `~/.config/bible-terminal/config.json`
+
+The first two environment variables must contain absolute paths. Inspect and
+change preferences with the CLI instead of editing JSON directly:
+
+```console
+bible config path
+bible config show
+bible config set plain true
+bible config set color false
+bible config set translation webp
+bible config reset
+```
+
+Saved preferences provide defaults. Explicit command-line flags take priority,
+including `--plain=false` and `--no-color=false`. Redirected output remains
+plain even when the saved plain preference is false.
 
 The first release should:
 

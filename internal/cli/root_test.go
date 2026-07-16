@@ -45,6 +45,7 @@ func TestHelp(t *testing.T) {
 		"Read the Bible from your terminal",
 		"books",
 		"completion",
+		"config",
 		"read",
 		"random",
 		"search",
