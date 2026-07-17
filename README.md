@@ -143,7 +143,8 @@ text licensing requirements.
 ## Installation
 
 Tagged releases ship checksummed single-binary archives for macOS and Linux on
-Intel/AMD64 and ARM64. See the [installation guide](docs/INSTALL.md) for archive
+Intel/AMD64 and ARM64. Public release downloads require no GitHub account, API
+token, or GitHub CLI. See the [installation guide](docs/INSTALL.md) for archive
 verification, installation, source builds, and Bash, Zsh, Fish, and PowerShell
 completion setup.
 
