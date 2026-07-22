@@ -3,7 +3,7 @@ module github.com/vmrocha/bible-terminal
 go 1.26
 
 require (
-	github.com/mattn/go-isatty v0.0.20
+	github.com/mattn/go-isatty v0.0.23
 	github.com/spf13/cobra v1.10.2
 	modernc.org/sqlite v1.53.0
 )
